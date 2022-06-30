@@ -11,7 +11,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await injector();
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<AuthProvider>.value(
+      value: AuthProvider(),
+    ),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,14 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Olx',
       navigatorKey: NavigationService().navigationKey,
       debugShowCheckedModeBanner: false,
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AuthProvider>.value(
-            value: AuthProvider(),
-          )
-        ],
-        child: EnterPhone(),
-      ),
+      home: EnterPhone(),
     ));
   }
 }

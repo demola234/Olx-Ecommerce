@@ -16,12 +16,14 @@ class Toasts {
                 width: double.maxFinite,
                 height: 100,
                 padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  message,
-                  maxLines: 5,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
+                child: Center(
+                  child: Text(
+                    message,
+                    maxLines: 5,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -46,12 +48,14 @@ class Toasts {
               width: double.maxFinite,
               height: 100,
               padding: const EdgeInsets.all(12.0),
-              child: Text(
-                message,
-                maxLines: 5,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
+              child: Center(
+                child: Text(
+                  message,
+                  maxLines: 5,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

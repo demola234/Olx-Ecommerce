@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:olx/core/utils/navigator.dart';
-import 'package:olx/features/authentication/presentation/view/onboarding/onboarding.dart';
 
-import '../../../features/authentication/presentation/view/phone_authentication/otp_verification.dart';
+import '../../../core/utils/custom_toasts.dart';
+import '../../../core/utils/navigator.dart';
+import '../../../features/authentication/presentation/view/onboarding/onboarding.dart';
 
 abstract class PhoneAuthService {
   Future verifyPhoneNumber(String phoneNumber,
@@ -13,10 +12,11 @@ abstract class PhoneAuthService {
       required void Function(String)? codeAutoRetrievalTimeout});
 
   Future phoneCredential(String verificationId, String otp, String phone);
+  Future saveDetails();
 }
 
 class PhoneAuthServiceImpl implements PhoneAuthService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String? verifyId;
   @override
   Future<void> verifyPhoneNumber(String phone,
@@ -43,12 +43,17 @@ class PhoneAuthServiceImpl implements PhoneAuthService {
       final User user = authCredential.user!;
 
       if (user != null) {
-        final uid = authCredential.user!.uid;
+        Toasts.showSuccessToast("Verification Completed");
+        NavigationService().replaceScreen(OnBoarding());
       } else {
-        return null;
+        Toasts.showErrorToast("Invalid OTP");
       }
     } catch (e) {
+      Toasts.showErrorToast("Invalid OTP");
       print(e.toString());
     }
   }
+
+  @override
+  Future saveDetails() async {}
 }

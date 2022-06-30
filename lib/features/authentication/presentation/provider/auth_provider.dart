@@ -41,21 +41,25 @@ class AuthProvider extends ChangeNotifier {
       phoneAuthStateChange = PhoneAuthState.codeSent;
     }, codeSent: (String id, int? token) {
       verificationId = id;
-      notifyListeners();
-      Toasts.showSuccessToast("OTP Sent");
       NavigationService().replaceScreen(
           VerifyOTP(phoneNumber: number, verifyId: verificationId));
+      notifyListeners();
+      Toasts.showSuccessToast("OTP Sent");
+
       phoneAuthStateChange = PhoneAuthState.codeSent;
     });
   }
 
-  Future<void> verifyOTP(
-      String verificationId, String otp, String phone) async {
+  Future verifyOTP(String verificationId, String otp, String phone) async {
     phoneAuthStateChange = PhoneAuthState.loading;
-    await authService.phoneCredential(verificationId, otp, phone);
-    Toasts.showSuccessToast("Verification Completed");
-    NavigationService().replaceScreen(OnBoarding());
-    notifyListeners();
-    phoneAuthStateChange = PhoneAuthState.success;
+    try {
+     final user = await authService.phoneCredential(verificationId, otp, phone);
+
+
+      notifyListeners();
+      phoneAuthStateChange = PhoneAuthState.success;
+    } catch (e) {
+      
+    }
   }
 }

@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/utils/config.dart';
 import '../../../../../data/remote/authentication/phone_auth_service.dart';
+import '../../provider/auth_states.dart';
 import 'otp_verification.dart';
 
 class EnterPhone extends StatefulWidget {
@@ -24,7 +25,7 @@ class EnterPhone extends StatefulWidget {
 
 class _EnterPhoneState extends State<EnterPhone> {
   PhoneAuthServiceImpl authService = PhoneAuthServiceImpl();
-  // TextEditingController phoneTextEditingController = TextEditingController();
+  TextEditingController phoneTextEditingController = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   String? verificationId;
   String number = "";
@@ -32,6 +33,7 @@ class _EnterPhoneState extends State<EnterPhone> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -93,7 +95,7 @@ class _EnterPhoneState extends State<EnterPhone> {
                           autoValidateMode: AutovalidateMode.disabled,
                           selectorTextStyle:
                               const TextStyle(color: Colors.black),
-                          textFieldController: state.phoneTextEditingController,
+                          textFieldController: phoneTextEditingController,
                           formatInput: false,
                           maxLength: 10,
                           keyboardType: TextInputType.phone,
@@ -127,15 +129,18 @@ class _EnterPhoneState extends State<EnterPhone> {
                   ),
                   child: InkWell(
                     onTap: () {
-                      state.verifyPhoneNumber(number);
+                      state.verifyPhoneNumber(number).then((value) {
+                        phoneTextEditingController.clear();
+                      });
                       print("HELLLO ${number}");
-                      state.phoneTextEditingController.clear();
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Next",
+                          state.phoneAuthState != PhoneAuthState.loading
+                              ? "Next"
+                              : "Loading",
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,

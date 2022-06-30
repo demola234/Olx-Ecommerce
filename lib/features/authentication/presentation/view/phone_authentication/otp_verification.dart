@@ -1,17 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/core/constants/colors.dart';
-import 'package:olx/di/di.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/constants/image_assets.dart';
 import '../../../../../core/utils/config.dart';
-import '../../../../../core/utils/navigator.dart';
 import '../../../../../data/remote/authentication/phone_auth_service.dart';
 import '../../provider/auth_provider.dart';
 import '../../widgets/otp_timer_widget.dart';
-import '../onboarding/onboarding.dart';
 
 class VerifyOTP extends StatefulWidget {
   final String phoneNumber;
@@ -25,7 +21,7 @@ class VerifyOTP extends StatefulWidget {
 
 class _VerifyOTPState extends State<VerifyOTP> {
   PhoneAuthServiceImpl authService = PhoneAuthServiceImpl();
-  String? verifyId;
+  String? otp;
   final defaultPinTheme = PinTheme(
     width: 56,
     height: 56,
@@ -39,6 +35,12 @@ class _VerifyOTPState extends State<VerifyOTP> {
       borderRadius: BorderRadius.circular(20),
     ),
   );
+
+  verifyOTP(BuildContext context) {
+      Provider.of<AuthProvider>(context, listen: false)
+          .verifyOTP(widget.verifyId, otp!, widget.phoneNumber);
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +89,10 @@ class _VerifyOTPState extends State<VerifyOTP> {
             pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
             showCursor: true,
             onCompleted: (pin) async {
-              // state.verifyOTP(widget.verifyId, pin, widget.phoneNumber);
+              setState(() {
+                otp = pin;
+              });
+              verifyOTP(context);
               if (kDebugMode) {
                 print(pin);
                 print("Entered Otp $pin");
