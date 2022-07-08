@@ -1,20 +1,14 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:olx/core/constants/colors.dart';
 import 'package:olx/core/constants/image_assets.dart';
-import 'package:olx/core/utils/navigator.dart';
-import 'package:olx/di/di.dart';
 import 'package:olx/features/authentication/presentation/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../../core/utils/config.dart';
-import '../../../../../data/remote/authentication/phone_auth_service.dart';
 import '../../provider/auth_states.dart';
-import 'otp_verification.dart';
 
 class EnterPhone extends StatefulWidget {
   const EnterPhone({Key? key}) : super(key: key);
@@ -24,9 +18,7 @@ class EnterPhone extends StatefulWidget {
 }
 
 class _EnterPhoneState extends State<EnterPhone> {
-  PhoneAuthServiceImpl authService = PhoneAuthServiceImpl();
   TextEditingController phoneTextEditingController = TextEditingController();
-  FirebaseAuth _auth = FirebaseAuth.instance;
   String? verificationId;
   String number = "";
 
@@ -132,7 +124,9 @@ class _EnterPhoneState extends State<EnterPhone> {
                       state.verifyPhoneNumber(number).then((value) {
                         phoneTextEditingController.clear();
                       });
-                      print("HELLLO ${number}");
+                      if (kDebugMode) {
+                        print("HELLO $number");
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
